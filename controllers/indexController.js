@@ -35,15 +35,3 @@ module.exports.sign_up = (req, res, next) => {
     res.redirect('/');
   });
 };
-
-
-
-/*
-
-firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: {type: String, required: true, unique: true},
-  password: { type: String, required: true },
-  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]// Array of friends
-
-*/
