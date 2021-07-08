@@ -57,7 +57,10 @@ module.exports.create_user = [
 
 //GET /users/:userID
 module.exports.user_details = (req, res, next) => {
-
+  User.findById(req.params.userID).exec((err, user) => {
+    if (err) { return res.json({'message': 'User not found'}); };
+    return res.json(user);  
+  });
 };
 
 //PUT /users/:userID
