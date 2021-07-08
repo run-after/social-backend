@@ -2,10 +2,15 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
 
+//GET /users
 module.exports.user_list = (req, res, next) => {
-
+  User.find().sort([['lastName', 'ascending']]).exec((err, users) => {
+    if (err) { return res.json(err); };
+    return res.json(users);
+  });
 };
 
+//POST /users
 module.exports.create_user = [
 
   body('firstName', 'You must enter a first name').trim().isLength({ min: 1 }).escape(),
@@ -50,14 +55,17 @@ module.exports.create_user = [
   }
 ];
 
+//GET /users/:userID
 module.exports.user_details = (req, res, next) => {
-  res.send('user details')
+
 };
 
+//PUT /users/:userID
 module.exports.edit_user_details = (req, res, next) => {
 
 };
 
+//DELETE /users/:userID
 module.exports.delete_user = (req, res, next) => {
 
 };
