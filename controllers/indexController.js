@@ -16,22 +16,3 @@ module.exports.log_in = (req, res, next) => {
     });
   })(req, res, next);
 };
-
-module.exports.sign_up = (req, res, next) => {
-  const user = new User({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8),
-    friends: []
-  });
-
-  user.save((err, user) => {
-    if (err) {
-      return res.json(err.errors)
-    }
-    if (err) { return next(err); };
-    console.log('user saved');
-    res.redirect('/');
-  });
-};
