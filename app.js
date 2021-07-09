@@ -31,12 +31,24 @@ passport.use(new LocalStrategy(
         if (res) {
           return done(null, user);
         } else {
-          console.log('wrong password')
           return done(null, false, { message: 'Incorrect password.' });
         };
       });
     });
   }
+));
+
+const passportJWT = require('passport-jwt');
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
+
+passport.use(new JWTStrategy({
+  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.SECRET
+}, function (jwtPayload, cb) {
+    console.log(jwtPayload)
+    return cb(null, jwtPayload.user);
+   }
 ));
 
 // view engine setup
@@ -70,12 +82,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-
-// I can sign up
-// I can log in
-// password is hashed
-// password is compared
-
-// Need jwt
-// Need to save jwt
