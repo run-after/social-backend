@@ -64,7 +64,7 @@ module.exports.user_details = (req, res, next) => {
 };
 
 //PUT /users/:userID
-module.exports.edit_user_details =[
+module.exports.edit_user_details = [
   
   body('firstName', 'You must enter a first name').trim().isLength({ min: 1 }).escape(),
   body('lastName', 'You  must enter a last name').trim().isLength({ min: 1 }).escape(),
@@ -93,9 +93,15 @@ module.exports.edit_user_details =[
       });
     });
   }
-]
+];
 
 //DELETE /users/:userID
 module.exports.delete_user = (req, res, next) => {
 
+  User.findByIdAndDelete(req.params.userID, (err, docs) => {
+    if (err) { return res.json({'message': 'User not found'}); };//not found
+    // delete posts and comments and likes and friend requests
+    return res.json(docs)
+  });
+  
 };
