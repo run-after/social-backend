@@ -47,7 +47,7 @@ module.exports.create_user = [
       };
       req.logIn(user, { session: false }, function (err) {
         if (err) { return next(err); };
-          const token = jwt.sign({user}, process.env.SECRET);
+          const token = jwt.sign({user}, process.env.SECRET, {expiresIn: '1d'});
           return res.json({ user, token });
       });
     });
