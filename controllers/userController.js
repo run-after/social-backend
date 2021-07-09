@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken');
 
 //GET /users
 module.exports.user_list = (req, res, next) => {
@@ -42,14 +43,12 @@ module.exports.create_user = [
 
     user.save((err, user) => {
       if (err) {
-        return res.json({ 'message': 'Email already exists' }); // Make sure this is right... might trigger for other errors too
+        return res.json({ 'message': 'Email already exists' });
       };
       req.logIn(user, { session: false }, function (err) {
-        if (err) {
-          console.log('login error', err)
-          return next(err);
-        };
-        return res.json({ 'user': user });// maybe make token and save
+        if (err) { return next(err); };
+          const token = jwt.sign({user}, process.env.SECRET);
+          return res.json({ user, token });
       });
     });
   }
@@ -97,11 +96,9 @@ module.exports.edit_user_details = [
 
 //DELETE /users/:userID
 module.exports.delete_user = (req, res, next) => {
-
   User.findByIdAndDelete(req.params.userID, (err, docs) => {
-    if (err) { return res.json({'message': 'User not found'}); };//not found
+    if (err) { return res.json({'message': 'User not found'}); };
     // delete posts and comments and likes and friend requests
     return res.json(docs)
   });
-  
 };
