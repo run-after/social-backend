@@ -1,4 +1,5 @@
 const Post = require('../models/Post');
+const Like = require('../models/Like');
 const { body, validationResult } = require('express-validator');
 
 //GET /posts
@@ -62,7 +63,15 @@ module.exports.delete_post = (req, res, next) => {
   });
 };
 
-//PUT /posts/:postID/like
+//PUT /posts/:postID/likes
 module.exports.like_post = (req, res, next) => {
+  const like = new Like({
+    post: req.params.postID,
+    user: req.user
+  });
 
+  like.save((err, like) => {
+    if (err) { return res.json({ 'message': 'Post not found' }); };
+    return res.json(like);
+  });
 };
