@@ -56,7 +56,10 @@ module.exports.edit_post = (req, res, next) => {
 
 //DELETE /posts/:postID
 module.exports.delete_post = (req, res, next) => {
-
+  Post.findByIdAndDelete(req.params.postID, (err, post) => {
+    if (err || !post) { return res.json({ 'message': 'Post not found' }); };
+    return res.json(post);
+  });
 };
 
 //PUT /posts/:postID/like
