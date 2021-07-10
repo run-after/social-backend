@@ -1,4 +1,5 @@
 const Post = require('../models/Post');
+const { body, validationResult } = require('express-validator');
 
 //GET /posts
 module.exports.post_list = (req, res, next) => {
@@ -9,9 +10,28 @@ module.exports.post_list = (req, res, next) => {
 };
 
 //POST /posts
-module.exports.create_post = (req, res, next) => {
+module.exports.create_post = [
 
-};
+  body('content', 'You must include the content of the post').trim().isLength({ min: 1 }).escape(),
+  
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return req.json({'message': errors})
+    };
+
+    const post = new Post({
+      content: req.body.content,
+      author: req.user._id
+    });
+
+    post.save((err, post) => {
+      if (err) { return res.json(err); };
+      return res.json(post);
+    });
+  }
+];
 
 //GET /posts/:postID
 module.exports.post_detail = (req, res, next) => {
