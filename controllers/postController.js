@@ -48,17 +48,33 @@ module.exports.post_detail = (req, res, next) => {
 };
 
 //PUT /posts/:postID
-module.exports.edit_post = (req, res, next) => {
-  Post.findById(req.params.postID, (err, post) => {
-    if (err) { return res.json({ 'message': 'Post does not exist' }); };
-    post.content = req.body.content;
+module.exports.edit_post = [
 
-    post.save((err, post) => {
-      if (err) { return res.json(err); };
-      return res.json(post);
+  body('content', 'You must include the content of the post').trim().isLength({ min: 1 }).escape(),
+  
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const errorMessages = [];
+      errors.errors.forEach((msg) => {
+        errorMessages.push(msg.msg);
+      });
+
+      return res.json({ 'message': errorMessages });
+    };    
+
+    Post.findById(req.params.postID, (err, post) => {
+      if (err) { return res.json({ 'message': 'Post does not exist' }); };
+      post.content = req.body.content;
+
+      post.save((err, post) => {
+        if (err) { return res.json(err); };
+        return res.json(post);
+      });
     });
-  });
-};
+  }
+];
 
 //DELETE /posts/:postID
 module.exports.delete_post = (req, res, next) => {
