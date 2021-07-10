@@ -46,7 +46,6 @@ passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.SECRET
 }, function (jwtPayload, cb) {
-    console.log(jwtPayload)
     return cb(null, jwtPayload.user);
    }
 ));
@@ -63,7 +62,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users', passport.authenticate('jwt', { session: false }), usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -82,3 +81,9 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+/* temp token: 
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZyaWVuZHMiOltdLCJfaWQiOiI2MGU3MTg1Nzk2OGE5NmM4ZTk2MWI4NGIiLCJmaXJzdE5hbWUiOiJ3aW5uZXIiLCJsYXN0TmFtZSI6Indpbm5lciIsImVtYWlsIjoiYWJjQHphYmMuY29tIiwicGFzc3dvcmQiOiIkMmEkMDgkVlpaNUI0ZzJRLzIyT1YuYTJSN3ZmdTBMSnNDcmhFRWdXYm9VaWVnOC9aU01vZHczUWtQczYiLCJfX3YiOjB9LCJpYXQiOjE2MjU4NDY3ODR9.wOBMjzWCCNNMHAOhrfg5TqPJnpS8wSjdJEdi2JivvRM
+
+*/
