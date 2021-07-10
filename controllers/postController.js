@@ -35,7 +35,10 @@ module.exports.create_post = [
 
 //GET /posts/:postID
 module.exports.post_detail = (req, res, next) => {
-
+  Post.findById(req.params.postID).exec((err, post) => {
+    if (err) { return res.json({ 'message': 'Post not found' }); };
+    return res.json(post);
+  });
 };
 
 //PUT /posts/:postID
