@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const LikeSchema = new Schema({
-  post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true },
+  comment: {type: mongoose.Schema.Types.ObjectId, ref: 'Comment' },
+  post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
