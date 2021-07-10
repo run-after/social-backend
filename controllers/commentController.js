@@ -48,9 +48,33 @@ module.exports.comment_detail = (req, res, next) => {
 };
 
 //PUT /posts/:postID/comments/:commentID
-module.exports.edit_comment = (req, res, next) => {
+module.exports.edit_comment = [
 
-};
+  body('content', 'You must include the content of the comment').trim().isLength({ min: 1 }).escape(),
+  
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const errorMessages = [];
+      errors.errors.forEach((msg) => {
+        errorMessages.push(msg.msg);
+      });
+
+      return res.json({ 'message': errorMessages });
+    };    
+
+    Comment.findById(req.params.commentID, (err, comment) => {
+      if (err) { return res.json({ 'message': 'Comment does not exist' }); };
+      comment.content = req.body.content;
+
+      comment.save((err, post) => {
+        if (err) { return res.json(err); };
+        return res.json(comment);
+      });
+    });
+  }
+];
 
 //DELETE /posts/:postID/comments/:commentID
 module.exports.delete_comment = (req, res, next) => {
