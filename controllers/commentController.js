@@ -41,7 +41,10 @@ module.exports.create_comment = [
 
 //GET /posts/:postID/comments/:commentID
 module.exports.comment_detail = (req, res, next) => {
-
+  Comment.findById(req.params.commentID).exec((err, comment) => {
+    if (err) { return res.json({ 'message': 'Comment not found' }); };
+    return res.json(comment);
+  });
 };
 
 //PUT /posts/:postID/comments/:commentID
