@@ -1,4 +1,5 @@
 const Comment = require('../models/Comment');
+const { body, validationResult } = require('express-validator');
 
 //GET /posts/:postID/comments
 module.exports.comment_list = (req, res, next) => {
@@ -9,9 +10,29 @@ module.exports.comment_list = (req, res, next) => {
 };
 
 //POST /posts/:postID/comments
-module.exports.create_comment = (req, res, next) => {
+module.exports.create_comment = [
 
-};
+  body('content', 'You must include comment content').trim().isLength({ min: 1 }).escape(),
+  
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.json({ errors });
+    };
+
+    const comment = new Comment({
+      content: req.body.content,
+      author: req.user._id,
+      post: req.params.postID
+    });
+
+    comment.save((err, comment) => {
+      if (err) { return res.json({ 'message': 'Post not found' }); };
+      return res.json(comment);
+    });
+  }
+];
 
 //GET /posts/:postID/comments/:commentID
 module.exports.comment_detail = (req, res, next) => {
