@@ -78,7 +78,12 @@ module.exports.edit_comment = [
 
 //DELETE /posts/:postID/comments/:commentID
 module.exports.delete_comment = (req, res, next) => {
-
+  Comment.findByIdAndDelete(req.params.commentID, (err, comment) => {
+    
+    if (err || !comment) { return res.json({ 'message': 'Comment not found' }); };
+    return res.json(comment);
+    // DELETE ALL LIKES
+  });
 };
 
 //GET /posts/:postID/comments/:commentID/likes
