@@ -97,5 +97,13 @@ module.exports.get_likes = (req, res, next) => {
 
 //PUT /posts/:postID/comments/:commentID/likes
 module.exports.like_comment = (req, res, next) => {
+  const like = new Like({
+    comment: req.params.commentID,
+    user: req.user
+  });
 
+  like.save((err, like) => {
+    if (err) { return res.json({ 'message': 'Comment not found' }); };
+    return res.json(like);
+  });
 };
