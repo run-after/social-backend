@@ -18,7 +18,12 @@ module.exports.create_comment = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return res.json({ errors });
+      const errorMessages = [];
+      errors.errors.forEach((msg) => {
+        errorMessages.push(msg.msg);
+      });
+
+      return res.json({ 'message': errorMessages });
     };
 
     const comment = new Comment({
