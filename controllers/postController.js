@@ -43,7 +43,15 @@ module.exports.post_detail = (req, res, next) => {
 
 //PUT /posts/:postID
 module.exports.edit_post = (req, res, next) => {
+  Post.findById(req.params.postID, (err, post) => {
+    if (err) { return res.json({ 'message': 'Post does not exist' }); };
+    post.content = req.body.content;
 
+    post.save((err, post) => {
+      if (err) { return res.json(err); };
+      return res.json(post);
+    });
+  });
 };
 
 //DELETE /posts/:postID
