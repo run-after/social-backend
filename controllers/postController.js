@@ -2,7 +2,10 @@ const Post = require('../models/Post');
 
 //GET /posts
 module.exports.post_list = (req, res, next) => {
-
+  Post.find().exec((err, post_list) => {
+    if (err) { return res.json(err); };
+    return res.json(post_list);
+  });
 };
 
 //POST /posts
