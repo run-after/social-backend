@@ -19,7 +19,12 @@ module.exports.create_post = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return req.json({'message': errors})
+      const errorMessages = [];
+      errors.errors.forEach((msg) => {
+        errorMessages.push(msg.msg);
+      });
+
+      return res.json({ 'message': errorMessages });
     };
 
     const post = new Post({
