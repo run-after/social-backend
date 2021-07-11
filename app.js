@@ -17,6 +17,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const postsRouter = require('./routes/posts');
 
 var app = express();
 
@@ -63,6 +64,7 @@ app.use(passport.initialize());
 
 app.use('/', indexRouter);
 app.use('/users', passport.authenticate('jwt', { session: false }), usersRouter);
+app.use('/posts', passport.authenticate('jwt', { session: false }), postsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -81,9 +83,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-/* temp token: 
-
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZyaWVuZHMiOltdLCJfaWQiOiI2MGU3MTg1Nzk2OGE5NmM4ZTk2MWI4NGIiLCJmaXJzdE5hbWUiOiJ3aW5uZXIiLCJsYXN0TmFtZSI6Indpbm5lciIsImVtYWlsIjoiYWJjQHphYmMuY29tIiwicGFzc3dvcmQiOiIkMmEkMDgkVlpaNUI0ZzJRLzIyT1YuYTJSN3ZmdTBMSnNDcmhFRWdXYm9VaWVnOC9aU01vZHczUWtQczYiLCJfX3YiOjB9LCJpYXQiOjE2MjU4NDY3ODR9.wOBMjzWCCNNMHAOhrfg5TqPJnpS8wSjdJEdi2JivvRM
-
-*/
