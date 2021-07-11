@@ -1,5 +1,6 @@
 const Post = require('../models/Post');
 const Like = require('../models/Like');
+const Comment = require('../models/Comment');
 const { body, validationResult } = require('express-validator');
 
 //GET /posts
@@ -80,6 +81,25 @@ module.exports.edit_post = [
 module.exports.delete_post = (req, res, next) => {
   Post.findByIdAndDelete(req.params.postID, (err, post) => {
     if (err || !post) { return res.json({ 'message': 'Post not found' }); };
+    // Delete all associated comments
+    Comment.find({ 'post': req.params.postID }).exec((err, comment_list) => {
+      if (err) { return res.json(err); };
+      // iterate through each comment
+      comment_list.forEach((comment) => {
+        //remove comment
+        Comment.findByIdAndDelete(comment._id).exec((err) => {
+          if (err) { return res.json(err); };
+        });
+        // remove comment's likes
+        Like.find({ 'comment': comment._id }).remove().exec((err, like) => {
+          if (err) { return res.json(err); };
+        });
+      });
+    });
+    // Delete all associated likes
+    Like.find({ 'post': req.params.postID }).remove().exec((err, data) => {
+      if (err) { return res.json(err); };
+    });
     return res.json(post);
   });
 };
@@ -104,3 +124,5 @@ module.exports.like_post = (req, res, next) => {
     return res.json(like);
   });
 };
+
+// Add remove like method
