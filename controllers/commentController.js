@@ -89,7 +89,7 @@ module.exports.delete_comment = (req, res, next) => {
 
 //GET /posts/:postID/comments/:commentID/likes
 module.exports.get_likes = (req, res, next) => {
-  Like.find({ post: req.params.commentID }).exec((err, like_list) => {
+  Like.find({ comment: req.params.commentID }).exec((err, like_list) => {
     if (err) { return res.json({ 'message': 'Comment not found' }); };
     return res.json(like_list);
   });
