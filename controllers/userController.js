@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 const Post = require('../models/Post');
+const FriendRequest = require('../models/FriendRequest');
 
 //GET /users
 module.exports.user_list = (req, res, next) => {
@@ -54,7 +55,7 @@ module.exports.edit_user_details = [
 module.exports.delete_user = (req, res, next) => {
   User.findByIdAndDelete(req.params.userID, (err, docs) => {
     if (err) { return res.json({'message': 'User not found'}); };
-    // delete posts and comments and likes and friend requests
+    // delete posts and comments and likes and friend requests////////
     return res.json(docs)
   });
 };
@@ -72,5 +73,18 @@ module.exports.get_user_comments = (req, res, next) => {
   Post.find({ 'author': req.params.userID }).exec((err, comment_list) => {
     if (err) { return res.json(err); };
     return res.json(comment_list);
+  });
+};
+
+module.exports.get_friend_requests = (req, res, next) => {
+  const data = { 'requested': [], 'requester': [] };
+  FriendRequest.find({ 'requested': req.user }).exec((err, requested_list) => {
+    if (err) { return res.json(err); };
+    data.requested = requested_list;
+    FriendRequest.find({ 'requester': req.user }).exec((err, requester_list) => {
+      if (err) { return res.json(err); };
+      data.requester = requester_list;
+      return res.json(data);
+    });
   });
 };
