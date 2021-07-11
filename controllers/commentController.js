@@ -108,3 +108,10 @@ module.exports.like_comment = (req, res, next) => {
     return res.json(like);
   });
 };
+
+module.exports.unlike_comment = (req, res, next) => {
+  Like.find({ 'user': req.user, 'comment': req.params.commentID }).deleteOne().exec((err, like) => {
+    if (err) { return res.json(err); };
+    return res.json(like);
+  });
+};
