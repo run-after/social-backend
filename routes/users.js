@@ -3,6 +3,7 @@ var router = express.Router();
 
 const userController = require('../controllers/userController');
 
+router.get('/friend_requests', userController.get_friend_requests);
 router.get('/', userController.user_list);
 router.get('/:userID', userController.user_details);
 router.put('/:userID', userController.edit_user_details);
