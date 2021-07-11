@@ -80,10 +80,11 @@ module.exports.edit_comment = [
 //DELETE /posts/:postID/comments/:commentID
 module.exports.delete_comment = (req, res, next) => {
   Comment.findByIdAndDelete(req.params.commentID, (err, comment) => {
-    
     if (err || !comment) { return res.json({ 'message': 'Comment not found' }); };
+    Like.find({ 'comment': comment._id }).remove().exec((err) => {
+      if (err) { return res.json(err); };
+    });
     return res.json(comment);
-    // DELETE ALL LIKES
   });
 };
 
