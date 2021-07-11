@@ -125,4 +125,9 @@ module.exports.like_post = (req, res, next) => {
   });
 };
 
-// Add remove like method
+module.exports.unlike_post = (req, res, next) => {
+  Like.find({ 'user': req.user, 'post': req.params.postID }).deleteOne().exec((err, like) => {
+    if (err) { return res.json(err); };
+    return res.json(like);
+  });
+};
