@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
+const Post = require('../models/Post');
 
 //GET /users
 module.exports.user_list = (req, res, next) => {
@@ -55,5 +56,21 @@ module.exports.delete_user = (req, res, next) => {
     if (err) { return res.json({'message': 'User not found'}); };
     // delete posts and comments and likes and friend requests
     return res.json(docs)
+  });
+};
+
+//GET /users/:userID/posts
+module.exports.get_user_posts = (req, res, next) => {
+  Post.find({ 'author': req.params.userID }).exec((err, post_list) => {
+    if (err) { return res.json(err); };
+    return res.json(post_list);
+  });
+};
+
+//GET /users/:userID/comments
+module.exports.get_user_comments = (req, res, next) => {
+  Post.find({ 'author': req.params.userID }).exec((err, comment_list) => {
+    if (err) { return res.json(err); };
+    return res.json(comment_list);
   });
 };
