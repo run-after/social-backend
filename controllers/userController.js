@@ -54,7 +54,7 @@ module.exports.edit_user_details = [
 //DELETE /users/:userID
 module.exports.delete_user = (req, res, next) => {
   User.findByIdAndDelete(req.params.userID, (err, docs) => {
-    if (err) { return res.json({'message': 'User not found'}); };
+    if (err) { return res.json({'message': ['User not found']}); };
     // delete posts and comments and likes and friend requests////////
     return res.json(docs)
   });

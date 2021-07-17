@@ -34,7 +34,7 @@ module.exports.create_comment = [
     });
 
     comment.save((err, comment) => {
-      if (err) { return res.json({ 'message': 'Post not found' }); };
+      if (err) { return res.json({ 'message': ['Post not found'] }); };
       return res.json(comment);
     });
   }
@@ -43,7 +43,7 @@ module.exports.create_comment = [
 //GET /posts/:postID/comments/:commentID
 module.exports.comment_detail = (req, res, next) => {
   Comment.findById(req.params.commentID).exec((err, comment) => {
-    if (err) { return res.json({ 'message': 'Comment not found' }); };
+    if (err) { return res.json({ 'message': ['Comment not found'] }); };
     return res.json(comment);
   });
 };
@@ -66,7 +66,7 @@ module.exports.edit_comment = [
     };    
 
     Comment.findById(req.params.commentID, (err, comment) => {
-      if (err) { return res.json({ 'message': 'Comment does not exist' }); };
+      if (err) { return res.json({ 'message': ['Comment does not exist'] }); };
       comment.content = req.body.content;
 
       comment.save((err, post) => {
@@ -80,7 +80,7 @@ module.exports.edit_comment = [
 //DELETE /posts/:postID/comments/:commentID
 module.exports.delete_comment = (req, res, next) => {
   Comment.findByIdAndDelete(req.params.commentID, (err, comment) => {
-    if (err || !comment) { return res.json({ 'message': 'Comment not found' }); };
+    if (err || !comment) { return res.json({ 'message': ['Comment not found'] }); };
     Like.find({ 'comment': comment._id }).remove().exec((err) => {
       if (err) { return res.json(err); };
     });
@@ -91,7 +91,7 @@ module.exports.delete_comment = (req, res, next) => {
 //GET /posts/:postID/comments/:commentID/likes
 module.exports.get_likes = (req, res, next) => {
   Like.find({ comment: req.params.commentID }).exec((err, like_list) => {
-    if (err) { return res.json({ 'message': 'Comment not found' }); };
+    if (err) { return res.json({ 'message': ['Comment not found'] }); };
     return res.json(like_list);
   });
 };
@@ -104,7 +104,7 @@ module.exports.like_comment = (req, res, next) => {
   });
 
   like.save((err, like) => {
-    if (err) { return res.json({ 'message': 'Comment not found' }); };
+    if (err) { return res.json({ 'message': ['Comment not found'] }); };
     return res.json(like);
   });
 };

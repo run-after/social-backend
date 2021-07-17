@@ -43,7 +43,7 @@ module.exports.create_post = [
 //GET /posts/:postID
 module.exports.post_detail = (req, res, next) => {
   Post.findById(req.params.postID).exec((err, post) => {
-    if (err) { return res.json({ 'message': 'Post not found' }); };
+    if (err) { return res.json({ 'message': ['Post not found'] }); };
     return res.json(post);
   });
 };
@@ -66,7 +66,7 @@ module.exports.edit_post = [
     };    
 
     Post.findById(req.params.postID, (err, post) => {
-      if (err) { return res.json({ 'message': 'Post does not exist' }); };
+      if (err) { return res.json({ 'message': ['Post does not exist'] }); };
       post.content = req.body.content;
 
       post.save((err, post) => {
@@ -80,7 +80,7 @@ module.exports.edit_post = [
 //DELETE /posts/:postID
 module.exports.delete_post = (req, res, next) => {
   Post.findByIdAndDelete(req.params.postID, (err, post) => {
-    if (err || !post) { return res.json({ 'message': 'Post not found' }); };
+    if (err || !post) { return res.json({ 'message': ['Post not found'] }); };
     // Delete all associated comments
     Comment.find({ 'post': req.params.postID }).exec((err, comment_list) => {
       if (err) { return res.json(err); };
@@ -107,7 +107,7 @@ module.exports.delete_post = (req, res, next) => {
 //GET /posts/:postID/likes
 module.exports.get_likes = (req, res, next) => {
   Like.find({ post: req.params.postID }).exec((err, post_list) => {
-    if (err) { return res.json({ 'message': 'Post not found' }); };
+    if (err) { return res.json({ 'message': ['Post not found'] }); };
     return res.json(post_list);
   });
 };
@@ -120,7 +120,7 @@ module.exports.like_post = (req, res, next) => {
   });
 
   like.save((err, like) => {
-    if (err) { return res.json({ 'message': 'Post not found' }); };
+    if (err) { return res.json({ 'message': ['Post not found'] }); };
     return res.json(like);
   });
 };

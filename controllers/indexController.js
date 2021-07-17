@@ -52,7 +52,7 @@ module.exports.create_user = [
 
     user.save((err, user) => {
       if (err) {
-        return res.json({ 'message': 'Email already exists' });
+        return res.json({ 'message': ['Email already exists'] });
       };
       req.logIn(user, { session: false }, function (err) {
         if (err) { return next(err); };
