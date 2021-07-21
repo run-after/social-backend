@@ -20,7 +20,7 @@ module.exports.create_friend_request = (req, res, next) => {
 };
 
 module.exports.delete_friend_request = (req, res, next) => {
-  FriendRequest.find({ 'requester': req.user, 'requested': req.params.requestedID }).deleteOne().exec((err, request) => {
+  FriendRequest.findById(req.params.requestedID).deleteOne().exec((err, request) => {
     if (err) { return res.json(err); };
     return res.json(request);
   });
