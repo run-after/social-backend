@@ -26,7 +26,13 @@ module.exports.create_user = [
   body('firstName', 'You must enter a first name').trim().isLength({ min: 1 }).escape(),
   body('lastName', 'You must enter a last name').trim().isLength({ min: 1 }).escape(),
   body('email', 'You must enter an email').trim().isEmail().escape(),
-  body('password', 'Password must be at least 6 chars').trim().isLength({min: 6}).escape(),
+  body('password', 'Password must be at least 6 chars').trim().isLength({ min: 6 }).escape(),
+  body('confirmation').custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Password confirmation does not match password');
+    };
+    return true;
+  }),
   
   (req, res, next) => {
     const errors = validationResult(req);
