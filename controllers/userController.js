@@ -43,6 +43,7 @@ module.exports.edit_user_details = [
       if (err) { return res.json(err); };
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;
+      user.friends = req.body.friends;
       user.save((err, user) => {
         if (err) { return res.json(err); };
         return res.json(user);
@@ -62,7 +63,7 @@ module.exports.delete_user = (req, res, next) => {
 
 //GET /users/:userID/posts
 module.exports.get_user_posts = (req, res, next) => {
-  Post.find({ 'author': req.params.userID }).exec((err, post_list) => {
+  Post.find({ 'author': req.params.userID }).populate('author').exec((err, post_list) => {
     if (err) { return res.json(err); };
     return res.json(post_list);
   });
