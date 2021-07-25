@@ -5,7 +5,7 @@ const { body, validationResult } = require('express-validator');
 
 //GET /posts
 module.exports.post_list = (req, res, next) => {
-  Post.find().exec((err, post_list) => {
+  Post.find().populate('author').sort([['createdAt', 'descending']]).exec((err, post_list) => {
     if (err) { return res.json(err); };
     return res.json(post_list);
   });
