@@ -14,7 +14,7 @@ module.exports.post_list = (req, res, next) => {
 //POST /posts
 module.exports.create_post = [
 
-  body('content', 'You must include the content of the post').trim().isLength({ min: 1 }).escape(),
+  body('content', 'You must include the content of the post').trim().isLength({ min: 1 }),
   
   (req, res, next) => {
     const errors = validationResult(req);
