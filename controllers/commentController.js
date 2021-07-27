@@ -4,7 +4,7 @@ const { body, validationResult } = require('express-validator');
 
 //GET /posts/:postID/comments
 module.exports.comment_list = (req, res, next) => {
-  Comment.find({'post': req.params.postID}).exec((err, comment_list) => {
+  Comment.find({'post': req.params.postID}).populate('author').sort([['createdAt', 'descending']]).exec((err, comment_list) => {
     if (err) { return res.json(err); };
     return res.json(comment_list);
   });
@@ -13,7 +13,7 @@ module.exports.comment_list = (req, res, next) => {
 //POST /posts/:postID/comments
 module.exports.create_comment = [
 
-  body('content', 'You must include comment content').trim().isLength({ min: 1 }).escape(),
+  body('content', 'You must include comment content').trim().isLength({ min: 1 }),
   
   (req, res, next) => {
     const errors = validationResult(req);
