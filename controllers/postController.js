@@ -106,13 +106,13 @@ module.exports.delete_post = (req, res, next) => {
 
 //GET /posts/:postID/likes
 module.exports.get_likes = (req, res, next) => {
-  Like.find({ post: req.params.postID }).exec((err, post_list) => {
+  Like.find({ post: req.params.postID }).exec((err, like_list) => {
     if (err) { return res.json({ 'message': ['Post not found'] }); };
-    return res.json(post_list);
+    return res.json(like_list);
   });
 };
 
-//PUT /posts/:postID/likes
+//POST /posts/:postID/likes
 module.exports.like_post = (req, res, next) => {
   const like = new Like({
     post: req.params.postID,
