@@ -2,6 +2,8 @@ const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 const Post = require('../models/Post');
 const FriendRequest = require('../models/FriendRequest');
+const Like = require('../models/Like');
+const Comment = require('../models/Comment');
 
 //GET /users
 module.exports.user_list = (req, res, next) => {
@@ -55,8 +57,41 @@ module.exports.edit_user_details = [
 //DELETE /users/:userID
 module.exports.delete_user = (req, res, next) => {
   User.findByIdAndDelete(req.params.userID, (err, docs) => {
-    if (err) { return res.json({'message': ['User not found']}); };
-    // delete posts and comments and likes and friend requests////////
+    if (err) { return res.json({ 'message': ['User not found'] }); };
+    Post.find({ 'author': req.params.userID }).exec((err, post_list) => {
+      if (err) { return err.json(); };
+      post_list.forEach(post => {
+        Like.find({ 'post': post._id }).remove().exec((err, data) => {
+          if (err) { return err.json(); };
+        });
+        Comment.find({ 'post': post._id }).remove().exec((err, data) => {
+          if (err) { return err.json(); };
+        });
+        Post.findByIdAndDelete(post._id).exec((err, data) => {
+          if (err) { return err.json(); };
+        });
+      });
+    });
+    Comment.find({ 'author': req.params.userID }).exec((err, comment_list) => {
+      if (err) { return err.json(); };
+      comment_list.forEach(comment => {
+        Like.find({ 'comment': comment._id }).remove().exec((err, data) => {
+          if (err) { return err.json(); };
+        });
+        Comment.findByIdAndDelete(comment._id).exec((err, data) => {
+          if (err) { return err.json(); };
+        });
+      });
+    });
+    Like.find({ 'user': req.params.userID }).remove().exec((err, data) => {
+      if (err) { return err.json(); };
+    });
+    FriendRequest.find({ 'requester': req.params.userID }).remove().exec((err, data) => {
+      if (err) { return err.json(); };
+    });
+    FriendRequest.find({ 'requested': req.params.userID }).remove().exec((err, data) => {
+      if (err) { return err.json(); };
+    });
     return res.json(docs)
   });
 };
