@@ -56,43 +56,66 @@ module.exports.edit_user_details = [
 
 //DELETE /users/:userID
 module.exports.delete_user = (req, res, next) => {
-  User.findByIdAndDelete(req.params.userID, (err, docs) => {
+  // Delete user from DB
+  User.findByIdAndDelete(req.params.userID, (err, deletedUser) => {
     if (err) { return res.json({ 'message': ['User not found'] }); };
+    // Iterate through each user on friend list and remove user from list
+    deletedUser.friends.forEach(friendID => {
+      User.findById(friendID).exec((err, user) => {
+        if (err) { return res.json(err); };
+        user.friends = user.friends.filter(friendID => friendID.toString() !== deletedUser._id.toString());
+        user.save((err, user) => {
+          if (err) { return res.json(err); };
+        });
+      });
+    });
+    // Remove all posts created by user
     Post.find({ 'author': req.params.userID }).exec((err, post_list) => {
       if (err) { return err.json(); };
+      // Iterate through each post and...
       post_list.forEach(post => {
-        Like.find({ 'post': post._id }).remove().exec((err, data) => {
+        // Delete likes
+        Like.find({ 'post': post._id }).deleteMany().exec((err, data) => {
           if (err) { return err.json(); };
         });
-        Comment.find({ 'post': post._id }).remove().exec((err, data) => {
+        // Delete comments
+        Comment.find({ 'post': post._id }).deleteMany().exec((err, data) => {
           if (err) { return err.json(); };
         });
+        // Delete post
         Post.findByIdAndDelete(post._id).exec((err, data) => {
           if (err) { return err.json(); };
         });
       });
     });
+    // Delete all comments made by user
     Comment.find({ 'author': req.params.userID }).exec((err, comment_list) => {
       if (err) { return err.json(); };
+      // Iterate through comments made by user and...
       comment_list.forEach(comment => {
-        Like.find({ 'comment': comment._id }).remove().exec((err, data) => {
+        // Delete likes
+        Like.find({ 'comment': comment._id }).deleteMany().exec((err, data) => {
           if (err) { return err.json(); };
         });
+        // Delete comments
         Comment.findByIdAndDelete(comment._id).exec((err, data) => {
           if (err) { return err.json(); };
         });
       });
     });
-    Like.find({ 'user': req.params.userID }).remove().exec((err, data) => {
+    // Delete all likes made by user
+    Like.find({ 'user': req.params.userID }).deleteMany().exec((err, data) => {
       if (err) { return err.json(); };
     });
-    FriendRequest.find({ 'requester': req.params.userID }).remove().exec((err, data) => {
+    // Delete all friend requests that user requested
+    FriendRequest.find({ 'requester': req.params.userID }).deleteMany().exec((err, data) => {
       if (err) { return err.json(); };
     });
-    FriendRequest.find({ 'requested': req.params.userID }).remove().exec((err, data) => {
+    // Delete all friend requests that user was requested
+    FriendRequest.find({ 'requested': req.params.userID }).deleteMany().exec((err, data) => {
       if (err) { return err.json(); };
     });
-    return res.json(docs)
+    return res.json(deletedUser);
   });
 };
 
