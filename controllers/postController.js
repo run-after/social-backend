@@ -51,7 +51,7 @@ module.exports.post_detail = (req, res, next) => {
 //PUT /posts/:postID
 module.exports.edit_post = [
 
-  body('content', 'You must include the content of the post').trim().isLength({ min: 1 }).escape(),
+  body('content', 'You must include the content of the post').trim().isLength({ min: 1 }),
   
   (req, res, next) => {
     const errors = validationResult(req);

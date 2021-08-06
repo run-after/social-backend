@@ -51,7 +51,7 @@ module.exports.comment_detail = (req, res, next) => {
 //PUT /posts/:postID/comments/:commentID
 module.exports.edit_comment = [
 
-  body('content', 'You must include the content of the comment').trim().isLength({ min: 1 }).escape(),
+  body('content', 'You must include the content of the comment').trim().isLength({ min: 1 }),
   
   (req, res, next) => {
     const errors = validationResult(req);
