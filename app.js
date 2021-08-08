@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const FacebookStragegy = require('passport-facebook');
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
@@ -37,6 +38,18 @@ passport.use(new LocalStrategy(
           return done(null, false, { message: 'Incorrect password.' });
         };
       });
+    });
+  }
+));
+
+passport.use(new FacebookStragegy({
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackURL: 'http://localhost:3000/login/facebook'
+},
+  function (accessToken, refreshToken, profile, cb) {
+    User.findOrCreate({ profile }, function (err, user) {
+      return cb(err, user);
     });
   }
 ));
