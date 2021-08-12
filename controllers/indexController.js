@@ -20,6 +20,38 @@ module.exports.log_in = (req, res, next) => {
   })(req, res, next);
 };
 
+module.exports.facebook_log_in = (req, res, next) => {
+  User.find({ facebookID: req.body.userID }).exec((err, user) => {
+    if (err) { return res.json(err); };
+    if (user.length > 0) {
+      user = user[0];
+      req.logIn(user, { session: false }, function (err) {
+        if (err) { return next(err); };
+          const token = jwt.sign({user}, process.env.SECRET, {expiresIn: '1d'});
+          return res.json({ user, token });
+      });
+    } else {
+      const user = new User({
+        firstName: req.body.name.split(' ')[0],
+        lastName: req.body.name.split(' ')[1],
+        email: `${req.body.id}@facebook.com`,
+        password: bcrypt.hashSync(req.body.id, 8),
+        friends: [],
+        isFacebookLogin: true,
+        facebookID: req.body.id
+      });
+      user.save((err, user) => {
+        if (err) {return res.json(err);};
+        req.logIn(user, { session: false }, function (err) {
+          if (err) { return next(err); };
+          const token = jwt.sign({ user }, process.env.SECRET, { expiresIn: '1d' });
+          return res.json({ user, token });
+        });
+      });
+    };
+  });
+};
+
 //POST /users
 module.exports.create_user = [
 
