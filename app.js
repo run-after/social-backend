@@ -20,6 +20,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
 const friendRequestRouter = require('./routes/friendRequests');
+const imageRouter = require('./routes/imageUpload');
 
 var app = express();
 
@@ -69,6 +70,7 @@ app.use('/', indexRouter);
 app.use('/users', passport.authenticate('jwt', { session: false }), usersRouter);
 app.use('/posts', passport.authenticate('jwt', { session: false }), postsRouter);
 app.use('/friendRequests', passport.authenticate('jwt', { session: false }), friendRequestRouter);
+app.use('/imageUpload', passport.authenticate('jwt', { session: false }), imageRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
