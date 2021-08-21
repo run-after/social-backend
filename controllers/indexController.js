@@ -38,7 +38,8 @@ module.exports.facebook_log_in = (req, res, next) => {
         password: bcrypt.hashSync(req.body.id, 8),
         friends: [],
         isFacebookLogin: true,
-        facebookID: req.body.id
+        facebookID: req.body.id,
+        avatar: 'https://social-bucket.s3.us-east-2.amazonaws.com/anon.png'
       });
       user.save((err, user) => {
         if (err) {return res.json(err);};
