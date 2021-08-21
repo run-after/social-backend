@@ -46,6 +46,7 @@ module.exports.edit_user_details = [
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;
       user.friends = req.body.friends;
+      user.avatar = req.body.avatar;
       user.save((err, user) => {
         if (err) { return res.json(err); };
         return res.json(user);
