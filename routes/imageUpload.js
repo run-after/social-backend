@@ -23,8 +23,7 @@ const upload = multer({
       cb(null, Object.assign({}, req.file));
     },
     key: function (req, file, cb) {
-      console.log(file.mimetype)
-      const extention = file.mimetype.split('/')[1];
+      const extention = file.originalname.split('.')[1];
       cb(null, Date.now().toString() + `.${extention}`);
     }
   })
