@@ -48,4 +48,8 @@ router.post('/:userID/avatar-upload', upload.single('image'), function (req, res
   return res.json(req.file.location);
 });
 
+router.post('/', upload.single('image'), function (req, res, next) {
+  return res.json(req.file.location);
+});
+
 module.exports = router;
