@@ -30,7 +30,8 @@ module.exports.create_post = [
 
     const post = new Post({
       content: req.body.content,
-      author: req.user._id
+      author: req.user._id,
+      isPicture: req.body.isPicture
     });
 
     post.save((err, post) => {
