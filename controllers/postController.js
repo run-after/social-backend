@@ -2,6 +2,8 @@ const Post = require('../models/Post');
 const Like = require('../models/Like');
 const Comment = require('../models/Comment');
 const { body, validationResult } = require('express-validator');
+const aws = require('aws-sdk');
+const AmazonS3URI = require('amazon-s3-uri');
 
 //GET /posts
 module.exports.post_list = (req, res, next) => {
@@ -82,6 +84,19 @@ module.exports.edit_post = [
 module.exports.delete_post = (req, res, next) => {
   Post.findByIdAndDelete(req.params.postID, (err, post) => {
     if (err || !post) { return res.json({ 'message': ['Post not found'] }); };
+    
+    // If image post, delete from DB
+    if (post.isPicture) {
+      const s3 = new aws.S3();
+      const { key } = AmazonS3URI(post.content);
+      s3.deleteObject({
+        Bucket: process.env.AWS_BUCKET,
+        Key: key
+      }, function (err, data) {
+        if (err) { return res.json(err); };
+      });
+    };
+
     // Delete all associated comments
     Comment.find({ 'post': req.params.postID }).exec((err, comment_list) => {
       if (err) { return res.json(err); };
