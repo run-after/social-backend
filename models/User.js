@@ -9,7 +9,7 @@ const UserSchema = new Schema({
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],// Array of friends
   isFacebookLogin: { type: Boolean, default: false },
   facebookID: { type: String },
-  avatar: {type: String, default: 'https://social-bucket.s3.us-east-2.amazonaws.com/anon.png'}
+  avatar: { type: String, default: 'https://social-bucket.s3.us-east-2.amazonaws.com/anon.png'}
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);
