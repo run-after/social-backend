@@ -9,6 +9,8 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
+const compression = require('compression');
+const helmet = require('helment');
 
 
 const mongoose = require('mongoose');
@@ -65,6 +67,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(cors());
+spp.use(compression());
+app.use(helmet());
 
 app.use('/', indexRouter);
 app.use('/users', passport.authenticate('jwt', { session: false }), usersRouter);
