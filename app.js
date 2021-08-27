@@ -67,7 +67,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(cors());
-spp.use(compression());
+app.use(compression());
 app.use(helmet());
 
 app.use('/', indexRouter);
