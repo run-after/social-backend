@@ -10,7 +10,7 @@ const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const compression = require('compression');
-const helmet = require('helment');
+const helmet = require('helmet');
 
 
 const mongoose = require('mongoose');
