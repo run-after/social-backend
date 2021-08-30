@@ -66,7 +66,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
-app.use(cors());
+app.use(cors({origin: 'https://runafter-social.netlify.app'}));
 app.use(compression());
 app.use(helmet());
 
@@ -93,5 +93,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-// want to limit cors to only my frontend domain
