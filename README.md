@@ -111,7 +111,7 @@ Likes are associated with users and either a post or a comment.
 
 All images are uploaded to S3 with multer-s3. The image URLs are then saved into the User model or Post model.
 
-Cors is implemented to allow fetch calls from the seperate frontend.
+Cors is implemented to allow fetch calls from the seperate frontend. It also limits access to only the social frontend.
 
 ## Contact
 
